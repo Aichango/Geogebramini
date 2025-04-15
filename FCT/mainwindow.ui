@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>501</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>380</y>
+      <width>381</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="Loglabel">
+       <property name="text">
+        <string>日志输出：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="BrowerspushButton">
+       <property name="text">
+        <string>选择另存路径</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QTextBrowser" name="textBrowser"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="formLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>10</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="BeginpushButton">
+       <property name="text">
+        <string>开始检测</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="FinishpushButton">
+       <property name="text">
+        <string>结束检测</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTableWidget" name="DatatableWidget">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>60</y>
+      <width>381</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="textElideMode">
+     <enum>Qt::ElideMiddle</enum>
+    </property>
+    <property name="verticalScrollMode">
+     <enum>QAbstractItemView::ScrollPerItem</enum>
+    </property>
+    <row>
+     <property name="text">
+      <string>进入会话</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>检测软件版本号</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>检测硬件版本号</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>母线电压</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>母线电流</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>项电压</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>项电流</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>合格范围</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>检测结果</string>
+     </property>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string>OK</string>
+     </property>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="1" column="0">
+     <property name="text">
+      <string>S1.0.0</string>
+     </property>
+    </item>
+    <item row="1" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="2" column="0">
+     <property name="text">
+      <string>H1.0.0</string>
+     </property>
+    </item>
+    <item row="2" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="3" column="0">
+     <property name="text">
+      <string>[3.3~5]</string>
+     </property>
+    </item>
+    <item row="3" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="4" column="0">
+     <property name="text">
+      <string>[1.2~1.8]</string>
+     </property>
+    </item>
+    <item row="4" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="5" column="0">
+     <property name="text">
+      <string>[1.0~3.3]</string>
+     </property>
+    </item>
+    <item row="5" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+    <item row="6" column="0">
+     <property name="text">
+      <string>[0.8~1.0]</string>
+     </property>
+    </item>
+    <item row="6" column="1">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>501</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFCT">
+    <property name="title">
+     <string>FCT</string>
+    </property>
+   </widget>
+   <addaction name="menuFCT"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
