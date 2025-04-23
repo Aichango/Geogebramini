@@ -2,23 +2,16 @@
 #include "ui_mainwindow.h"
 #include <QWindow> // 用于窗口操作
 #include <direct.h>
-#include <filesystem>
 #include <windows.h>
 #include <io.h>
 #include <direct.h>
-#include <string>
-#include <iostream>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    // 设置表格的大小策略
-    ui->DatatableWidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-
-    // 设置列宽自适应表格大小
-    ui->DatatableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    InitializeTableSettings();
 
     // 设置窗口置顶
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
@@ -43,119 +36,480 @@ MainWindow::~MainWindow()
  * 3.数据有不合格的情况，计入log文件（定义log输出函数）
  */
 
+void MainWindow::InitializeTableSettings()
+{
+    // 设置表格的大小策略
+    ui->tableWidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+    // 设置列宽自适应表格大小
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // ui->tableWidget->setColumnWidth(0, 400);
+    // ui->tableWidget->setColumnWidth(1, 100);
+
+    // 设置表格全局属性
+    ui->tableWidget->setStyleSheet(
+        "QHeaderView::section {"
+        "    background-color: lightgray;"       // 表头背景色
+        "    qproperty-alignment: AlignCenter;"  // 表头文本居中
+        "}"
+        );
+
+    //设置表格行列，填充固定值
+    ui->tableWidget->setColumnCount(2);
+    ui->tableWidget->setHorizontalHeaderLabels({"合格范围", "测试结果"});
+    ui->tableWidget->setRowCount(16);
+    ui->tableWidget->setVerticalHeaderLabels({
+                                              "进入会话",
+                                              "检测软件版本号",
+                                              "检测硬件版本号",
+                                              "母线电压",
+                                              "母线电流",
+                                              "6vADC电压（程控电源）",
+                                              "6vADC电流（程控电源）",
+                                              "9vADC电压（程控电源）",
+                                              "9vADC电流（程控电源）",
+                                              "12vADC电压（程控电源）",
+                                              "12vADC电流（程控电源）",
+                                              "历史故障码",
+                                              "当前故障码",
+                                              "重启检测",
+                                              "AOI车辆识别",
+                                              "静态电流（0~100uA万用表)"});
+
+    //设置范围值
+    //进入会话
+    QTableWidgetItem *chat = new QTableWidgetItem("OK");         	// 新建一个项
+    chat->setFlags(chat->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(0, 0, chat);
+
+    //检测软件版本号
+    QTableWidgetItem *softwareversion = new QTableWidgetItem("S1.0.0");         	// 新建一个项
+    softwareversion->setFlags(softwareversion->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(1, 0, softwareversion);
+
+    //检测硬件版本号
+    QTableWidgetItem *hardwareversion = new QTableWidgetItem("H1.0.0");         	// 新建一个项
+    hardwareversion->setFlags(hardwareversion->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(2, 0, hardwareversion);
+
+    //母线电压
+    QTableWidgetItem *busvoltage = new QTableWidgetItem("[33v~39v(±10%)]");         	// 新建一个项
+    busvoltage->setFlags(busvoltage->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(3, 0, busvoltage);
+
+    //母线电流
+    QTableWidgetItem *buscurrent = new QTableWidgetItem("[0.9~1.1A]");         	// 新建一个项
+    buscurrent->setFlags(buscurrent->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(4, 0, buscurrent);
+
+    //6vADC电压（程控电源）ADCvoltage6v
+    QTableWidgetItem *ADCvoltage6v = new QTableWidgetItem("[5.7V~6.3V(±5%)]");         	// 新建一个项
+    ADCvoltage6v->setFlags(ADCvoltage6v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(5, 0, ADCvoltage6v);
+
+    //6vADC电流（程控电源）ADCcurrent6v
+    QTableWidgetItem *ADCcurrent6v = new QTableWidgetItem("[95mA~105mA(±5%)]");         	// 新建一个项
+    ADCcurrent6v->setFlags(ADCcurrent6v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(6, 0, ADCcurrent6v);
+
+    //9vADC电压（程控电源）ADCvoltage9v
+    QTableWidgetItem *ADCvoltage9v = new QTableWidgetItem("[8.55V~9.45V(±5%)]");         	// 新建一个项
+    ADCvoltage9v->setFlags(ADCvoltage9v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(7, 0, ADCvoltage9v);
+
+    //9vADC电流（程控电源）ADCcurrent9v
+    QTableWidgetItem *ADCcurrent9v = new QTableWidgetItem("[142.5mA~157.5mA(±5%)]");         	// 新建一个项
+    ADCcurrent9v->setFlags(ADCcurrent9v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(8, 0, ADCcurrent9v);
+
+    //12vADC电压（程控电源）ADCvoltage12v
+    QTableWidgetItem *ADCvoltage12v = new QTableWidgetItem("[11.4V~12.6V(±5%)]");         	// 新建一个项
+    ADCvoltage12v->setFlags(ADCvoltage12v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(9, 0, ADCvoltage12v);
+
+    //12vADC电流（程控电源）ADCcurrent12v
+    QTableWidgetItem *ADCcurrent12v = new QTableWidgetItem("[190mA~210mA(±5%)]");         	// 新建一个项
+    ADCcurrent12v->setFlags(ADCcurrent12v->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(10, 0, ADCcurrent12v);
+
+    // 历史故障码 historicalfaultcodes
+    QTableWidgetItem *historicalfaultcodes = new QTableWidgetItem("NULL");         	// 新建一个项
+    historicalfaultcodes->setFlags(historicalfaultcodes->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(11, 0, historicalfaultcodes);
+
+    // 当前故障码 currentfaultcode
+    QTableWidgetItem *currentfaultcode = new QTableWidgetItem("NULL");         	// 新建一个项
+    currentfaultcode->setFlags(currentfaultcode->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(12, 0, currentfaultcode);
+
+    // 重启检测 restartdetection
+    QTableWidgetItem *restartdetection = new QTableWidgetItem("[0,1]");         	// 新建一个项
+    restartdetection->setFlags(restartdetection->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(13, 0, restartdetection);
+
+    // AOI车辆识别 AOIvehicleidentification
+    QTableWidgetItem *AOIvehicleidentification = new QTableWidgetItem("[0,1]");         	// 新建一个项
+    AOIvehicleidentification->setFlags(AOIvehicleidentification->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(14, 0, AOIvehicleidentification);
+
+    // 静态电流（0~100uA万用表) staticcurrent
+    QTableWidgetItem *staticcurrent = new QTableWidgetItem("[0.8uA~1.0uA]");         	// 新建一个项
+    staticcurrent->setFlags(staticcurrent->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(15, 0, staticcurrent);
+
+}
+
+//txt数据转存QList
+QList<QStringList> MainWindow::LoadDataFromFile(const QString &FilePath)
+{
+    QList<QStringList> ParsedData;
+
+    QFile DataFile(FilePath);
+    if (!DataFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return ParsedData;
+    }
+
+    QTextStream DataStream(&DataFile);
+    while (!DataStream.atEnd()) {
+        const QString CurrentLine = DataStream.readLine().trimmed();
+        if(!CurrentLine.isEmpty()) {
+            ParsedData << CurrentLine.split(';');  // 修改分隔符
+        }
+    }
+
+    DataFile.close();
+    return ParsedData;
+}
+
+//QList数据填充到qtablewidget
+void MainWindow::PopulateTable(const QList<QStringList> &TableData)
+{
+    for(int RowIndex = 0; RowIndex < TableData.size(); ++RowIndex) {
+        const QStringList &CurrentRow = TableData[RowIndex];
+
+        // 填充数据列（从第二列开始）
+        for(int SourceCol = 0; SourceCol < CurrentRow.size(); ++SourceCol) {
+            const int TargetCol = SourceCol + 1; // 数据列偏移
+
+            // 创建单元格并设置值
+            QTableWidgetItem *NewItem = new QTableWidgetItem(CurrentRow[SourceCol]);
+
+            // 关键修改：第二个参数传递行号
+            const bool IsValid = ValidateCellContent(CurrentRow[SourceCol], RowIndex);
+
+            // 设置样式
+            NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+            NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+            NewItem->setTextAlignment(Qt::AlignCenter);
+
+            // 设置标记
+            NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+            // 权限控制
+            NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+            // 填充到目标列
+            ui->tableWidget->setItem(RowIndex, TargetCol, NewItem);
+        }
+    }
+
+    // 自动调整列宽（可选）
+    // ui->DatatableWidget->resizeColumnsToContents();
+}
+
+//检验数据合法性
+bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
+{
+    switch(ColumnIndex) { 
+    // 进入会话
+    case 0:
+        return !CellValue.trimmed().isEmpty();
+
+    // 检测软件版本号
+    case 1:
+        return (CellValue=="S1.0.0");
+
+    // 检测硬件版本号
+    case 2:
+        return (CellValue=="H1.0.0");
+
+    // 母线电压
+    case 3:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 母线电流
+    case 4:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 6vADC电压（程控电源）
+    case 5:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+    // 6vADC电流（程控电源）
+    case 6:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 9vADC电压（程控电源）
+    case 7:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 9vADC电流（程控电源）
+    case 8:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 12vADC电压（程控电源）
+    case 9:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 12vADC电流（程控电源）
+    case 10:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 历史故障码
+    case 11:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 当前故障码
+    case 12:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 重启检测
+    case 13:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // AOI车辆识别
+    case 14:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    // 静态电流（0~100uA万用表)
+    case 15:
+    {
+        bool isNumber;
+        double value = CellValue.toDouble(&isNumber);
+        return isNumber && (value >= 0.0 && value <= 100.0);
+    }
+
+    default:
+        return false;
+    }
+}
+
+//历史故障码填充
+void MainWindow::PopulateHistoricalDTCs(bool &IsValid,const QString &HistoricalDTCsData)
+{
+    QString value = HistoricalDTCsData;
+    // if (!IsValid){
+    //     value = NULL;
+    //     return;
+    // }
+
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(value);
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(12,1, NewItem);
+}
+
+//当前故障码填充
+void MainWindow::PopulateActiveDTCs(bool &IsValid,const QString &ActiveDTCsData )
+{
+
+    QString value = ActiveDTCsData;
+    // if (!IsValid){
+    //     value = NULL;
+    //     return;
+    // }
+
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(value);
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(12,1, NewItem);
+}
+
+//重启检测
+void MainWindow::CheckSystemReboot(bool &SystemReboot)
+{
+    bool IsValid = (SystemReboot)?true:false;
+    QString value = (SystemReboot)?"0":"1";
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(value);
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(13,1, NewItem);
+}
+
+//AOI车辆识别
+void MainWindow::IdentifyVehicleByAOI(bool &VehicleByAOI)
+{
+    bool IsValid = (VehicleByAOI)?true:false;
+    QString value = (VehicleByAOI)?"0":"1";
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(value);
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(14,1, NewItem);
+}
+
+//静态电流填充
+void MainWindow::PopulateQuiescentCurrent(float &QuiescentCurrent)
+{
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(QString::number(QuiescentCurrent, 'f', 2));
+    bool IsValid = (0.8<QuiescentCurrent && QuiescentCurrent<1.0)?true:false;
+
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(15,1, NewItem);
+
+
+}
+
+// 日志输出
+void MainWindow::WriteLog(const QString &LogfilePath,const QString &UseTime)
+{
+    GetLogFilePath(LogfilePath);
+    ui-> textBrowser ->clear ();
+    ui->textBrowser->insertPlainText(LogfilePath+"\n");
+    ui->textBrowser->insertPlainText(UseTime+"ms");
+}
+
 void MainWindow::on_BeginpushButton_clicked()
 {
+    DWORD start = GetTickCount();
+
+
     // 开始测试
-    chat();
-    CheckSoftwareVersion();
-    CheckHardwareVersion();
-    CheckBusVoltage();
-    CheckBusCurrent();
-    CheckTermVoltage();
-    CheckTermCurrent();
+    QString FilePath = "D:\\Projects\\lf\\c_case\\workspace\\FCT\\test\\data.txt";
+    QList<QStringList> TableData = LoadDataFromFile(FilePath);
+    PopulateTable(TableData);
 
+    //历史故障码
+    bool IsValid = true;
+    const QString HistoricalDTCsData = "";
+    PopulateHistoricalDTCs(IsValid,HistoricalDTCsData);
+
+    //当前故障码
+    const QString ActiveDTCsData = "";
+    PopulateActiveDTCs(IsValid,ActiveDTCsData );
+
+    //重启检测
+    bool SystemReboot = true;
+    CheckSystemReboot(SystemReboot);
+
+    //AOI车辆识别
+    bool VehicleByAOI = true;
+    IdentifyVehicleByAOI(VehicleByAOI);
+
+    //静态电流
+    float QuiescentCurrent = 0.9;
+    PopulateQuiescentCurrent(QuiescentCurrent);
+
+    // 日志输出
+    // 需要计时的代码
+    DWORD end = GetTickCount();
+    DWORD time = end - start;
+
+    const QString LogfilePath ="D:\\Projects\\lf\\c_case\\workspace\\FCT\\test\\test";
+    const QString UseTime = QString::number(time, 'f', 6);
+    WriteLog(LogfilePath,UseTime);
 }
 
-// 进入会话模式
-void MainWindow::chat()
-{
-    // Sleep(1000);
-    QTableWidgetItem *pItem = new QTableWidgetItem("OK");
-    pItem->setBackground(QBrush(Qt::green));        // 设置背景色
-    ui->DatatableWidget->setItem(0,1,pItem);
-};
-
-
-// 检测软件版本号
-void MainWindow::CheckSoftwareVersion()
-{
-    // Sleep(1000);
-    QTableWidgetItem *pItem = new QTableWidgetItem("S1.0.0");
-    pItem->setBackground(QBrush(Qt::green));        // 设置背景色
-    ui->DatatableWidget->setItem(1,1,pItem);
-};
-
-// 检测硬件版本号
-void MainWindow::CheckHardwareVersion()
-{
-    // Sleep(1000);
-    QTableWidgetItem *pItem = new QTableWidgetItem("H1.0.0");
-    pItem->setBackground(QBrush(Qt::green));        // 设置背景色
-    ui->DatatableWidget->setItem(2,1,pItem);
-};
-
-//检测母线电压
-void MainWindow::CheckBusVoltage()
-{
-    int BusVoltage=3;
-    QString str = QString::number(BusVoltage);
-    QTableWidgetItem *pItem = new QTableWidgetItem(str);
-    if (3.3<BusVoltage && BusVoltage<5){
-        pItem->setBackground(QBrush(Qt::green));
-    }
-    else{
-        pItem->setBackground(QBrush(Qt::red));
-    }    // 设置背景色
-    ui->DatatableWidget->setItem(3,1,pItem);
-}
-
-
-//检测母线电流
-void MainWindow::CheckBusCurrent()
-{
-    float BusCurrent=0.6;
-    QString str = QString::number(BusCurrent);
-    QTableWidgetItem *pItem = new QTableWidgetItem(str);
-    if (1.2<BusCurrent && BusCurrent<1.8){
-        pItem->setBackground(QBrush(Qt::green));
-    }
-    else{
-        pItem->setBackground(QBrush(Qt::red));
-    }    // 设置背景色
-    ui->DatatableWidget->setItem(4,1,pItem);
-}
-
-//检测项电压
-void MainWindow::CheckTermVoltage()
-{
-    float TermVoltage=2.2;
-    QString str = QString::number(TermVoltage);
-    QTableWidgetItem *pItem = new QTableWidgetItem(str);
-    if (1.0<TermVoltage && TermVoltage<3.3){
-        pItem->setBackground(QBrush(Qt::green));
-    }
-    else{
-        pItem->setBackground(QBrush(Qt::red));
-    }    // 设置背景色
-    ui->DatatableWidget->setItem(5,1,pItem);
-}
-
-//检测项电流
-void MainWindow::CheckTermCurrent()
-{
-    float TermCurrent=0.9;
-    QString str = QString::number(TermCurrent);
-    QTableWidgetItem *pItem = new QTableWidgetItem(str);
-    if (0.8<TermCurrent && TermCurrent<1){
-        pItem->setBackground(QBrush(Qt::green));
-    }
-    else{
-        pItem->setBackground(QBrush(Qt::red));
-    }    // 设置背景色
-    ui->DatatableWidget->setItem(6,1,pItem);
-}
-
-/*
- * 1.点击后结束检测，表格显示最终结果（1.0单个文件不需要额外处理）
- * 2.结束log输出（定义log文件保存函数）
- */
 
 // 创建日志目录和文件
-QString MainWindow::GetLogFilePath()
+QString MainWindow::GetLogFilePath(const QString &appDirPath)
 {
-    qDebug() << "应用程序目录：" << QCoreApplication::applicationDirPath();
+    // qDebug() << "应用程序目录：" << QCoreApplication::applicationDirPath();
     // 获取应用程序可执行文件所在目录
-    const QString appDirPath = QCoreApplication::applicationDirPath();
+    // const QString appDirPath = QCoreApplication::applicationDirPath();
 
     // 构建test目录路径（自动处理路径分隔符）
     const QDir appDir(appDirPath);
@@ -186,146 +540,6 @@ bool MainWindow::IsRedColor(const QColor& color) {
            color.blue() < 50;
 }
 
-//保存出错的日志
-void MainWindow::on_FinishpushButton_clicked()
-{
-    qDebug() << "点击按钮时路径：" << GetLogFilePath();
-    const QString fullPath = GetLogFilePath();
-    if (fullPath.isEmpty()) return;
-
-    QFile file(fullPath);
-    if (!file.open(QIODevice::Append | QIODevice::Text)) {
-        QMessageBox::critical(
-            this,
-            "错误",
-            QString("文件创建失败：\n%1\n错误类型：%2").arg(fullPath).arg(file.errorString())
-            );
-        return;
-    }
-
-    QTextStream out(&file);
-    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-            out.setCodec("UTF-8");
-    #else
-            out.setEncoding(QStringConverter::Utf8);
-    #endif
-
-    const int rowCount = ui->DatatableWidget->rowCount();
-    const int colCount = ui->DatatableWidget->columnCount();
-
-    bool hasError = false;
-    for (int row = 0; row < rowCount; ++row) {
-        QString headerText = ui->DatatableWidget->verticalHeaderItem(row)->text(); // 获取第1列的表头内容
-
-        QTableWidgetItem* headerItem = ui->DatatableWidget->item(row, 0);
-        QString headerrange = headerItem ? headerItem->text() : "未知项目";
-
-        for (int col = 0; col < colCount; ++col) {
-            if (QTableWidgetItem* item = ui->DatatableWidget->item(row, col)) {
-                const QColor bgColor = item->background().color();
-
-                if (IsRedColor(bgColor)) {
-                    const QString entry = QString("error:[%1,%2],\"%3\",\"%4\",\"%5\"\n")
-                    .arg(row + 1)
-                    .arg(col + 1 )
-                    .arg(headerText)
-                    .arg(headerrange)
-                    .arg(item->text());
-
-                    out << entry;
-                    hasError = true;
-                }
-            }
-        }
-    }
-
-    file.close();
-    QMessageBox::information(
-        this,
-        "操作完成",
-        hasError ? "已记录错误信息" : "未发现错误单元格"
-        );
-}
-
-void MainWindow::CopyLogFileToSelectedDirectory()
-{
-    // 1. 选择目标文件夹
-    QString targetDir = QFileDialog::getExistingDirectory(
-        this,
-        tr("选择保存目录"),
-        QDir::homePath(),
-        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
-        );
-
-    // 用户取消选择
-    if (targetDir.isEmpty()) return;
-
-    // 2. 定义源文件路径（根据实际情况调整路径）
-    QString sourcePath = GetLogFilePath();
-
-    // 3. 验证源文件存在
-    QFileInfo sourceFileInfo(sourcePath);
-    if (!sourceFileInfo.exists() || !sourceFileInfo.isFile()) {
-        QMessageBox::critical(
-            this,
-            tr("错误"),
-            tr("源文件不存在：\n%1").arg(sourcePath)
-            );
-        return;
-    }
-
-    // 4. 构建目标路径
-    QString targetPath = targetDir + "/" + sourceFileInfo.fileName();
-
-    // 5. 检查目标文件是否已存在
-    if (QFileInfo::exists(targetPath)) {
-        QMessageBox::StandardButton reply = QMessageBox::question(
-            this,
-            tr("文件已存在"),
-            tr("目标文件已存在，是否覆盖？\n%1").arg(targetPath),
-            QMessageBox::Yes | QMessageBox::No
-            );
-
-        if (reply == QMessageBox::No) return;
-
-        // 删除已有文件
-        if (!QFile::remove(targetPath)) {
-            QMessageBox::critical(
-                this,
-                tr("错误"),
-                tr("无法删除旧文件：\n%1").arg(targetPath)
-                );
-            return;
-        }
-    }
-
-    // 6. 执行文件复制
-    QFile sourceFile(sourcePath);
-    if (sourceFile.copy(targetPath)) {
-        QMessageBox::information(
-            this,
-            tr("成功"),
-            tr("文件已成功复制到：\n%1").arg(targetPath)
-            );
-    } else {
-        QMessageBox::critical(
-            this,
-            tr("错误"),
-            tr("文件复制失败！\n错误信息：%1").arg(sourceFile.errorString())
-            );
-    }
-    ui->textBrowser->setText(targetPath);
-}
-
-
-/*
- * 1.跳转窗口选择文件路径
- * 2.点击确认后，修改目前显示的文件路径（定义log另存为函数）
- */
-void MainWindow::on_BrowerspushButton_clicked()
-{
-    CopyLogFileToSelectedDirectory();
-}
 
 // 在 mainwindow.cpp 中实现
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>467</height>
+    <width>548</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,188 +17,72 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>380</y>
+      <x>100</x>
+      <y>600</y>
       <width>381</width>
-      <height>31</height>
+      <height>103</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QTextBrowser" name="textBrowser">
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;路径xxx&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;上电xxx&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="Loglabel">
        <property name="text">
-        <string>日志输出：</string>
+        <string>测试流程：</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="BrowerspushButton">
-       <property name="text">
-        <string>选择另存路径</string>
+     <item row="1" column="1">
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QTextBrowser" name="textBrowser"/>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="formLayoutWidget">
+   <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>10</y>
-      <width>201</width>
-      <height>31</height>
+      <x>50</x>
+      <y>80</y>
+      <width>451</width>
+      <height>511</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QPushButton" name="BeginpushButton">
-       <property name="text">
-        <string>开始检测</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="FinishpushButton">
-       <property name="text">
-        <string>结束检测</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
-   <widget class="QTableWidget" name="DatatableWidget">
+   <widget class="QPushButton" name="BeginpushButton">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>60</y>
-      <width>381</width>
-      <height>301</height>
+      <x>260</x>
+      <y>50</y>
+      <width>93</width>
+      <height>28</height>
      </rect>
     </property>
-    <property name="textElideMode">
-     <enum>Qt::ElideMiddle</enum>
+    <property name="text">
+     <string>开始检测</string>
     </property>
-    <property name="verticalScrollMode">
-     <enum>QAbstractItemView::ScrollPerItem</enum>
-    </property>
-    <row>
-     <property name="text">
-      <string>进入会话</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>检测软件版本号</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>检测硬件版本号</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>母线电压</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>母线电流</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>项电压</string>
-     </property>
-    </row>
-    <row>
-     <property name="text">
-      <string>项电流</string>
-     </property>
-    </row>
-    <column>
-     <property name="text">
-      <string>合格范围</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>检测结果</string>
-     </property>
-    </column>
-    <item row="0" column="0">
-     <property name="text">
-      <string>OK</string>
-     </property>
-    </item>
-    <item row="0" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="1" column="0">
-     <property name="text">
-      <string>S1.0.0</string>
-     </property>
-    </item>
-    <item row="1" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="2" column="0">
-     <property name="text">
-      <string>H1.0.0</string>
-     </property>
-    </item>
-    <item row="2" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="3" column="0">
-     <property name="text">
-      <string>[3.3~5]</string>
-     </property>
-    </item>
-    <item row="3" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="4" column="0">
-     <property name="text">
-      <string>[1.2~1.8]</string>
-     </property>
-    </item>
-    <item row="4" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="5" column="0">
-     <property name="text">
-      <string>[1.0~3.3]</string>
-     </property>
-    </item>
-    <item row="5" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
-    <item row="6" column="0">
-     <property name="text">
-      <string>[0.8~1.0]</string>
-     </property>
-    </item>
-    <item row="6" column="1">
-     <property name="text">
-      <string>0</string>
-     </property>
-    </item>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -206,7 +90,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>501</width>
+     <width>548</width>
      <height>25</height>
     </rect>
    </property>

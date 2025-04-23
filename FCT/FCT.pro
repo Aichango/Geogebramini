@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17 debug
+CONFIG += console c++17 debug
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -25,5 +25,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     readme.md \
-    test/a \
-    test/test.log
+    test/data.txt \
+    test/data_default.txt \
+    test/test.log \
+    test/test1.log \
+    test/故障码.txt \
+    test/故障码定义 - 副本.txt \
+    test/故障码定义.txt
