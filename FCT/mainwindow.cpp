@@ -58,7 +58,7 @@ void MainWindow::InitializeTableSettings()
     //设置表格行列，填充固定值
     ui->tableWidget->setColumnCount(2);
     ui->tableWidget->setHorizontalHeaderLabels({"合格范围", "测试结果"});
-    ui->tableWidget->setRowCount(16);
+    ui->tableWidget->setRowCount(17);
     ui->tableWidget->setVerticalHeaderLabels({
                                               "进入会话",
                                               "检测软件版本号",
@@ -75,7 +75,8 @@ void MainWindow::InitializeTableSettings()
                                               "当前故障码",
                                               "重启检测",
                                               "AOI车辆识别",
-                                              "静态电流（0~100uA万用表)"});
+                                              "静态电流（0~100uA万用表)",
+                                              "测试结果"});
 
     //设置范围值
     //进入会话
@@ -158,6 +159,11 @@ void MainWindow::InitializeTableSettings()
     staticcurrent->setFlags(staticcurrent->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
     ui->tableWidget->setItem(15, 0, staticcurrent);
 
+    // 测试结果 result
+    QTableWidgetItem * result= new QTableWidgetItem("OK");         	// 新建一个项
+    result->setFlags(result->flags() & (~Qt::ItemIsEditable));    	// 设置可选不可改
+    ui->tableWidget->setItem(16, 0, result);
+
 }
 
 //txt数据转存QList
@@ -215,7 +221,7 @@ void MainWindow::PopulateTable(const QList<QStringList> &TableData)
     }
 
     // 自动调整列宽（可选）
-    // ui->DatatableWidget->resizeColumnsToContents();
+    // ui->tableWidget->resizeColumnsToContents();
 }
 
 //检验数据合法性
@@ -239,7 +245,7 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 33.0 && value <= 39.0);
     }
 
     // 母线电流
@@ -247,7 +253,7 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 0.9 && value <= 1.1);
     }
 
     // 6vADC电压（程控电源）
@@ -255,14 +261,14 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 5.7 && value <= 6.3);
     }
     // 6vADC电流（程控电源）
     case 6:
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 95.0 && value <= 105.0);
     }
 
     // 9vADC电压（程控电源）
@@ -270,7 +276,7 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 8.55 && value <= 9.45);
     }
 
     // 9vADC电流（程控电源）
@@ -278,7 +284,7 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 142.5 && value <= 157.5);
     }
 
     // 12vADC电压（程控电源）
@@ -286,7 +292,7 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 11.4 && value <= 12.6);
     }
 
     // 12vADC电流（程控电源）
@@ -294,49 +300,8 @@ bool MainWindow::ValidateCellContent(const QString &CellValue, int ColumnIndex)
     {
         bool isNumber;
         double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
+        return isNumber && (value >= 190.0 && value <= 210.0);
     }
-
-    // 历史故障码
-    case 11:
-    {
-        bool isNumber;
-        double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
-    }
-
-    // 当前故障码
-    case 12:
-    {
-        bool isNumber;
-        double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
-    }
-
-    // 重启检测
-    case 13:
-    {
-        bool isNumber;
-        double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
-    }
-
-    // AOI车辆识别
-    case 14:
-    {
-        bool isNumber;
-        double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
-    }
-
-    // 静态电流（0~100uA万用表)
-    case 15:
-    {
-        bool isNumber;
-        double value = CellValue.toDouble(&isNumber);
-        return isNumber && (value >= 0.0 && value <= 100.0);
-    }
-
     default:
         return false;
     }
@@ -363,7 +328,7 @@ void MainWindow::PopulateHistoricalDTCs(bool &IsValid,const QString &HistoricalD
     NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
 
     // 填充到目标列
-    ui->tableWidget->setItem(12,1, NewItem);
+    ui->tableWidget->setItem(11,1, NewItem);
 }
 
 //当前故障码填充
@@ -453,22 +418,117 @@ void MainWindow::PopulateQuiescentCurrent(float &QuiescentCurrent)
 
 }
 
+// 测试结果
+void MainWindow::TestResult()
+{
+    bool res ;
+    // 遍历前 16 行（0 到 16 行）
+    for (int row = 0; row < 17; ++row) {
+        // 获取单元格对象
+        QTableWidgetItem* item = ui->tableWidget->item(row, 1);
+
+        if (item) {
+            // 获取背景颜色
+            QColor bgColor = item->background().color();
+
+            // 检查是否为红色（RGB 比较）
+            if (bgColor == Qt::red) {
+                // 获取单元格内容
+                bool res = false;
+            }
+        }
+    }
+    QString testresult = (res)?"OK":"NG";
+    // 创建单元格并设置值
+    QTableWidgetItem *NewItem = new QTableWidgetItem(testresult);
+
+    bool IsValid = (res)?true:false;
+
+    NewItem->setBackground(IsValid ? Qt::green : Qt::red);
+    NewItem->setForeground(IsValid ? Qt::black : Qt::white);
+    NewItem->setTextAlignment(Qt::AlignCenter);
+    // 设置标记
+    NewItem->setData(Qt::UserRole, IsValid); // 存储验证状态
+
+    // 权限控制
+    NewItem->setFlags(NewItem->flags() & ~Qt::ItemIsEditable);
+
+    // 填充到目标列
+    ui->tableWidget->setItem(16,1, NewItem);
+}
+
 // 日志输出
 void MainWindow::WriteLog(const QString &LogfilePath,const QString &UseTime)
 {
-    GetLogFilePath(LogfilePath);
+    const QString fullPath = GetLogFilePath(LogfilePath);
+    if (fullPath.isEmpty()) return;
+
+    QFile file(fullPath);
+    if (!file.open(QIODevice::Append | QIODevice::Text)) {
+        QMessageBox::critical(
+            this,
+            "错误",
+            QString("文件创建失败：\n%1\n错误类型：%2").arg(fullPath).arg(file.errorString())
+            );
+        return;
+    }
+
+    QTextStream out(&file);
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        out.setCodec("UTF-8");
+    #else
+        out.setEncoding(QStringConverter::Utf8);
+    #endif
+
+    const int rowCount = ui->tableWidget->rowCount();
+    const int colCount = ui->tableWidget->columnCount();
+
+    bool hasError = false;
+    for (int row = 0; row < rowCount; ++row) {
+        QString headerText = ui->tableWidget->verticalHeaderItem(row)->text(); // 获取第1列的表头内容
+
+        QTableWidgetItem* headerItem = ui->tableWidget->item(row, 0);
+        QString headerrange = headerItem ? headerItem->text() : "未知项目";
+
+        for (int col = 0; col < colCount; ++col) {
+            if (QTableWidgetItem* item = ui->tableWidget->item(row, col)) {
+                const QColor bgColor = item->background().color();
+
+                if (IsRedColor(bgColor)) {
+                    const QString entry = QString("error:[%1,%2],\"%3\",\"%4\",\"%5\"\n")
+                    .arg(row + 1)
+                        .arg(col + 1 )
+                        .arg(headerText)
+                        .arg(headerrange)
+                        .arg(item->text());
+
+                    out << entry;
+                    hasError = true;
+                }
+            }
+        }
+    }
+
+    file.close();
+    QMessageBox::information(
+        this,
+        "操作完成",
+        hasError ? "已记录错误信息" : "未发现错误单元格"
+        );
+
     ui-> textBrowser ->clear ();
-    ui->textBrowser->insertPlainText(LogfilePath+"\n");
-    ui->textBrowser->insertPlainText(UseTime+"ms");
+    ui->textBrowser->insertPlainText("项目日志:"+LogfilePath+"\test.log\n");
+    ui->textBrowser->insertPlainText("上电耗时:"+UseTime+"ms");
 }
 
+//点击开始按钮开始检测
 void MainWindow::on_BeginpushButton_clicked()
 {
     DWORD start = GetTickCount();
 
 
     // 开始测试
-    QString FilePath = "D:\\Projects\\lf\\c_case\\workspace\\FCT\\test\\data.txt";
+    QString FilePath = "D:\\Projects\\lf\\c_case\\workspace\\FCT\\test\\data2.txt";
     QList<QStringList> TableData = LoadDataFromFile(FilePath);
     PopulateTable(TableData);
 
@@ -492,6 +552,9 @@ void MainWindow::on_BeginpushButton_clicked()
     //静态电流
     float QuiescentCurrent = 0.9;
     PopulateQuiescentCurrent(QuiescentCurrent);
+
+    //测试结果
+    TestResult();
 
     // 日志输出
     // 需要计时的代码

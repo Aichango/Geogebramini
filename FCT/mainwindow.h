@@ -76,6 +76,9 @@ public:
     //静态电流填充
     void PopulateQuiescentCurrent(float &QuiescentCurrent);
 
+    // 测试结果
+    void TestResult();
+
     // 日志输出
     void WriteLog(const QString &LogfilePath,const QString &UseTime);
 

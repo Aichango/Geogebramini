@@ -26,6 +26,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     readme.md \
     test/data.txt \
+    test/data2.txt \
     test/data_default.txt \
     test/test.log \
     test/test1.log \
